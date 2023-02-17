@@ -136,5 +136,3 @@ tensor_on_gpu = tensor.to(device)
 #### вернем тензор обртано на цпу
 - tensor_back_on_cpu = tensor_on_gpu.cpu().numpy() 
   - верент копию тензора в tensor_back_on_cpu
-
-####
