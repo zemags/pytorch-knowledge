@@ -39,5 +39,36 @@ with torch.inference_mode():
 - оптимайзер
   - покажет как обновить внутренние параметры моедил, чтобы минимизровать функцию потерь
   - оптимайзеры тут torch.optim основные:
-    - стохастический градиентный спуск - на каждой итерации алгоритма из обучающей выборки каким-то (случайным) образом выбирается только один объект
+    - стохастический градиентный спуск (СГД) - на каждой итерации алгоритма из обучающей выборки каким-то (случайным) образом выбирается только один объект
     - Adam - это алгоритм оптимизации замены для стохастического градиентного спуска, может обрабатывать редкие градиенты в шумных задачах
+
+- средняя абсолютная ошибка - на рисунке это среднее всех Difference
+<img src="https://raw.githubusercontent.com/mrdbourke/pytorch-deep-learning/main/images/01-mae-loss-annotated.png" width="350" height="250">
+
+```python
+loss_fn = nn.L1Loss() # L1Loss - тоже что и средняя абсолютная ошибка
+
+
+class LinearRegressionModel(nn.Module):
+    def __init__(self):
+        super().__init__() 
+        self.weights = nn.Parameter(torch.randn(1,
+                                                dtype=torch.float),
+                                   requires_grad=True) 
+
+        self.bias = nn.Parameter(torch.randn(1,
+                                            dtype=torch.float),
+                                requires_grad=True)
+
+    # Forward определяет расчет в модели
+    def forward(self, x: torch.Tensor) -> torch.Tensor: # <- "x" это входные данные трейн или тест
+        return self.weights * x + self.bias # <- формула линейной регресии
+
+model_0 = LinearRegressionModel()
+# используем СГД, model_0 - какая нить модель, например модель линейной регресии
+optimizer = torch.optim.SGD(params=model_0.parameters(), lr=0.01)
+```
+# создаем обучающий луп и тестовый
+- обучающий луп ходит по обучающим данным и учится на отношении features (признаков) и labels (ответов)
+- тестовый луп ходит по тестовым данным и смотрит паттерны как хорошо обучилась модель
+
