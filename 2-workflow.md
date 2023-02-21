@@ -79,3 +79,12 @@ optimizer = torch.optim.SGD(params=model_0.parameters(), lr=0.01)
 4. perform backpropagation on the loss - вычисляет градиент потерь относительно каждого обновляемого параметра модели (каждый параметр с require_grad=True). Это известно как **backpropagation**: ```loss.backward()```
 5. update the optimizer (gradient descent) - обновите параметры с помощью require_grad=True в отношении градиентов потерь, чтобы улучшить их: ```optimizer.step()```
 
+```python
+for epoch in range(epochs):
+    model.train()
+    y_pred = model(x_train)
+    loss = loss_fn(y_pred, y_true)
+    optimizer.zero_grad()
+    loss.backward()
+    optimizer.step()
+```
