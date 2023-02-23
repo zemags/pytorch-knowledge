@@ -80,11 +80,44 @@ optimizer = torch.optim.SGD(params=model_0.parameters(), lr=0.01)
 5. update the optimizer (gradient descent) - обновите параметры с помощью require_grad=True в отношении градиентов потерь, чтобы улучшить их: ```optimizer.step()```
 
 ```python
-for epoch in range(epochs):
+for epoch in range(epochs)         прогнать данные через кол-во эпох:
     model.train()
     y_pred = model(x_train)
-    loss = loss_fn(y_pred, y_true)
+    loss = loss_fn(y_pred, y_true) посчитать лосс (как херово предиктит модель)
+    optimizer.zero_grad()          надо обнулять на каждой эпохе
+    loss.backward()                метод вычисления градиента, который используется при обновлении весов многослойного перцептрона )))
+    optimizer.step()               обновить параметры модели согласно лосу
+```
+
+#### шаги для тестового лупа
+1. forward pass	
+2. calculate the loss
+3. calulate evaluation metrics (опционально)
+
+```python
+torch.manual_seed(42)
+epochs = 100 установим кол-во эпох
+train_loss_values = []
+test_loss_values = []
+epoch_count = []
+
+for epoch in range(epochs): 
+    model_0.train()
+    y_pred = model_0(X_train)
+    loss = loss_fn(y_pred, y_train)
     optimizer.zero_grad()
     loss.backward()
     optimizer.step()
+
+    этап тестирования
+    model_0.eval() модель переключим в процесс определения качества
+
+    with torch.inference_mode():
+        test_pred = model_0(X_test)
+        test_loss = loss_fn(test_pred, y_test.type(torch.float))
+        if epoch % 10 == 0: каждые 10 эпох что происходит принтануть
+            epoch_count.append(epoch)
+            train_loss_values.append(loss.detach().numpy())
+            test_loss_values.append(test_loss.detach().numpy())
+            print(f"Epoch: {epoch} | MAE Train Loss: {loss} | MAE Test Loss: {test_loss} ")
 ```
